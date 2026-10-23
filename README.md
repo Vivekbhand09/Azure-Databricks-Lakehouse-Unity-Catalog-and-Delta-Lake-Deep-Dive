@@ -720,20 +720,6 @@ Beyond the hands-on parts, I studied the Unity Catalog governance model from the
 
 ---
 
-## 🔭 Future Improvements
-
-- [ ] Add **groups and `GRANT`/`REVOKE`** tests with a second user.
-- [ ] Implement **row filters, column masks** and an **ABAC** policy on a PII table.
-- [ ] Build a **medallion pipeline** (Bronze → Silver → Gold) using Auto Loader with a **Delta sink**.
-- [ ] Use **`MERGE`** for upserts and **Change Data Feed** for downstream propagation.
-- [ ] Explore **liquid clustering**, `OPTIMIZE` and **predictive optimization**.
-- [ ] Try **Delta Sharing** and **Lakehouse Federation**.
-- [ ] Orchestrate with **Databricks Jobs / Lakeflow** and deploy with **Databricks Asset Bundles**.
-- [ ] Recreate the full setup with **Terraform** (infrastructure as code).
-- [ ] Add screenshots and a short walkthrough video.
-
----
-
 ## 👤 Author
 
 **Vivek**

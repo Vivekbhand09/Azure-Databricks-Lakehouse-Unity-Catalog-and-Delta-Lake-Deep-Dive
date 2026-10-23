@@ -10,14 +10,12 @@
 ![Apache Spark](https://img.shields.io/badge/Apache%20Spark-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
 ![Microsoft Azure](https://img.shields.io/badge/Microsoft%20Azure-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)
 ![ADLS Gen2](https://img.shields.io/badge/ADLS%20Gen2-0062AD?style=for-the-badge&logo=microsoftazure&logoColor=white)
-
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![PySpark](https://img.shields.io/badge/PySpark-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
 ![Spark SQL](https://img.shields.io/badge/Spark%20SQL-4479A1?style=for-the-badge&logo=databricks&logoColor=white)
 ![Parquet](https://img.shields.io/badge/Parquet-50ABF1?style=for-the-badge&logo=apacheparquet&logoColor=white)
 ![Structured Streaming](https://img.shields.io/badge/Structured%20Streaming-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
 ![Auto Loader](https://img.shields.io/badge/Auto%20Loader-FF3621?style=for-the-badge&logo=databricks&logoColor=white)
-
 ![Microsoft Entra ID](https://img.shields.io/badge/Microsoft%20Entra%20ID-0078D4?style=for-the-badge&logo=microsoft&logoColor=white)
 ![Managed Identity](https://img.shields.io/badge/Managed%20Identity%20%2F%20RBAC-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)
 ![Medallion](https://img.shields.io/badge/Lakehouse-Medallion%20Architecture-6A1B9A?style=for-the-badge)

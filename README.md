@@ -134,6 +134,8 @@ flowchart LR
 | Security | Managed identity, RBAC, Microsoft Authenticator (MFA) |
 | Documentation | Markdown, Mermaid |
 
+![Gold Layer Tables](images/uc3.png)
+
 ---
 
 ## 🧾 Environment Reference
@@ -172,6 +174,9 @@ flowchart LR
     H --> I["9. Configure admin<br/>role"]
     I --> J["10. Storage credential<br/>+ external location"]
 ```
+![Gold Layer Tables](images/uc1.png)
+
+![Gold Layer Tables](images/uc2.png)
 
 | # | Step | What I did | Why it matters |
 |---|---|---|---|
@@ -475,6 +480,12 @@ File B [0] 3 cc chennai              File B [0] 3 cc chennai  ← untouched
 - Far **less I/O** for `UPDATE`, `DELETE` and `MERGE` (no rewriting of large files for a few changed rows).
 - **Lower compute and storage cost**, shorter write transactions and fewer conflicts between concurrent writers.
 - Maintenance: `OPTIMIZE` or `REORG TABLE ... APPLY (PURGE)` rewrites files so deleted rows are physically removed (important for GDPR-style erasure, followed by `VACUUM`).
+
+### Without Deletion Vector
+![Gold Layer Tables](images/uc4.png)
+
+### With Deletion Vector
+![Gold Layer Tables](images/uc5.png)
 
 ---
 

@@ -134,7 +134,7 @@ flowchart LR
 | Security | Managed identity, RBAC, Microsoft Authenticator (MFA) |
 | Documentation | Markdown, Mermaid |
 
-![Gold Layer Tables](utils/uc3.png)
+![Gold Layer Tables](Utils/uc3.png)
 
 ---
 
@@ -174,9 +174,9 @@ flowchart LR
     H --> I["9. Configure admin<br/>role"]
     I --> J["10. Storage credential<br/>+ external location"]
 ```
-![Gold Layer Tables](utils/uc1.png)
+![Gold Layer Tables](Utils/uc1.png)
 
-![Gold Layer Tables](utils/uc2.png)
+![Gold Layer Tables](Utils/uc2.png)
 
 | # | Step | What I did | Why it matters |
 |---|---|---|---|
@@ -482,10 +482,10 @@ File B [0] 3 cc chennai              File B [0] 3 cc chennai  ← untouched
 - Maintenance: `OPTIMIZE` or `REORG TABLE ... APPLY (PURGE)` rewrites files so deleted rows are physically removed (important for GDPR-style erasure, followed by `VACUUM`).
 
 ### Without Deletion Vector
-![Gold Layer Tables](utils/uc4.png)
+![Gold Layer Tables](Utils/uc4.png)
 
 ### With Deletion Vector
-![Gold Layer Tables](utils/uc5.png)
+![Gold Layer Tables](Utils/uc5.png)
 
 ---
 

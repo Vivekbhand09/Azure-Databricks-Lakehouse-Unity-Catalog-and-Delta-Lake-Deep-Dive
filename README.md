@@ -1,390 +1,526 @@
-# 🧱 Azure Databricks Lakehouse with Unity Catalog and Delta Lake
 
-### A hands-on project: building a governed Lakehouse on Azure from scratch, then exploring Delta Lake internals, Deletion Vectors, Clones and Auto Loader
+# 🧱 Azure Databricks Lakehouse with Unity Catalog, Delta Lake and Auto Loader
 
-<br>
+### An end-to-end, hands-on data engineering project: secure workspace setup, governed storage, Delta Lake internals and incremental ingestion on Azure
 
-![Azure Databricks](https://img.shields.io/badge/Azure%20Databricks-FF3621?style=for-the-badge&logo=databricks&logoColor=white)
-![Unity Catalog](https://img.shields.io/badge/Unity%20Catalog-0B2026?style=for-the-badge&logo=databricks&logoColor=white)
-![Delta Lake](https://img.shields.io/badge/Delta%20Lake-00ADD4?style=for-the-badge&logo=delta&logoColor=white)
-![Apache Spark](https://img.shields.io/badge/Apache%20Spark-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
-![Microsoft Azure](https://img.shields.io/badge/Microsoft%20Azure-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)
-![ADLS Gen2](https://img.shields.io/badge/ADLS%20Gen2-0062AD?style=for-the-badge&logo=microsoftazure&logoColor=white)
+![Microsoft Azure](https://img.shields.io/badge/Microsoft_Azure-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)
+![Azure Databricks](https://img.shields.io/badge/Azure_Databricks-FF3621?style=for-the-badge&logo=databricks&logoColor=white)
+![Unity Catalog](https://img.shields.io/badge/Unity_Catalog-FF3621?style=for-the-badge&logo=databricks&logoColor=white)
+![Delta Lake](https://img.shields.io/badge/Delta_Lake-00ADD4?style=for-the-badge&logo=delta&logoColor=white)
+![Apache Spark](https://img.shields.io/badge/Apache_Spark-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
+![PySpark](https://img.shields.io/badge/PySpark-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Spark SQL](https://img.shields.io/badge/Spark_SQL-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
+![ADLS Gen2](https://img.shields.io/badge/ADLS_Gen2-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)
+![Apache Parquet](https://img.shields.io/badge/Apache_Parquet-50ABF1?style=for-the-badge&logo=apache&logoColor=white)
+![Auto Loader](https://img.shields.io/badge/Auto_Loader-FF3621?style=for-the-badge&logo=databricks&logoColor=white)
+![Structured Streaming](https://img.shields.io/badge/Structured_Streaming-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
+![Microsoft Entra ID](https://img.shields.io/badge/Microsoft_Entra_ID-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![PySpark](https://img.shields.io/badge/PySpark-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
-![Spark SQL](https://img.shields.io/badge/Spark%20SQL-4479A1?style=for-the-badge&logo=databricks&logoColor=white)
-![Parquet](https://img.shields.io/badge/Parquet-50ABF1?style=for-the-badge&logo=apacheparquet&logoColor=white)
-![Structured Streaming](https://img.shields.io/badge/Structured%20Streaming-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)
-![Auto Loader](https://img.shields.io/badge/Auto%20Loader-FF3621?style=for-the-badge&logo=databricks&logoColor=white)
-![Microsoft Entra ID](https://img.shields.io/badge/Microsoft%20Entra%20ID-0078D4?style=for-the-badge&logo=microsoft&logoColor=white)
-![Managed Identity](https://img.shields.io/badge/Managed%20Identity%20%2F%20RBAC-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)
-![Medallion](https://img.shields.io/badge/Lakehouse-Medallion%20Architecture-6A1B9A?style=for-the-badge)
 ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
 ![Markdown](https://img.shields.io/badge/Markdown-000000?style=for-the-badge&logo=markdown&logoColor=white)
+![Status](https://img.shields.io/badge/status-learning_project-blue?style=flat-square)
+![Region](https://img.shields.io/badge/region-Central_India-orange?style=flat-square)
+![Runtime](https://img.shields.io/badge/Databricks_Runtime-18_LTS-red?style=flat-square)
+![Compute](https://img.shields.io/badge/compute-single_node_Standard__D4ds__v5-lightgrey?style=flat-square)
+
+
 
 ---
 
 ## 🎯 Project Overview
 
-This repository documents my **end-to-end hands-on journey with Azure Databricks**, from creating the cloud resources to building a **governed Lakehouse** with **Unity Catalog**, and then exploring how **Delta Lake** works internally.
+This repository documents a **complete, hands-on build of a governed Lakehouse on Azure Databricks**, from creating the cloud resources to exploring how **Delta Lake** works at file level and ingesting data incrementally with **Auto Loader**.
 
-The project answers three questions:
+Instead of only running notebooks, the project focuses on **understanding what happens behind each command**: which resources Azure creates, how Unity Catalog decides where data is stored, what files appear in the storage account after every operation, and how Delta's transaction log makes versioning and time travel possible.
 
-| Question | Where it is answered |
+> **In one sentence:** *Provision Azure Databricks securely, govern all data through Unity Catalog, then study Delta Lake and Auto Loader by inspecting the real files they create in ADLS Gen2.*
+
+### Who is this for?
+- Learners who want a **clear, practical walkthrough** of Azure Databricks + Unity Catalog.
+- Data engineers preparing for **interviews** (concepts, internals and Q&A are included in the detailed guides).
+- Anyone who wants to see **what actually sits in cloud storage** behind managed tables, external tables, volumes, deletion vectors and streaming checkpoints.
+
+---
+
+## 🧭 What This Project Covers
+
+| Area | What was done |
 |---|---|
-| *How do I set up Azure Databricks + Unity Catalog properly, with my own storage and no secrets?* | [Part 1](#-part-1-environment-setup-step-by-step) |
-| *How does Unity Catalog organize and govern data (managed/external tables, views, volumes)?* | [Part 2](#-part-2-unity-catalog-hands-on) |
-| *What really happens inside a Delta table (transaction log, time travel, deletion vectors, clones, Auto Loader)?* | [Parts 3 to 5](#-part-3-delta-lake-deep-dive) |
-
-> 💡 Everything here was **actually executed** in my own Azure subscription (resource names are shown exactly as I used them), and each experiment was **verified by inspecting the files in Azure Storage** and the Delta transaction log.
-
----
-
-## ✨ What I Built (at a Glance)
-
-- ✅ Provisioned an **Azure Databricks workspace** (Hybrid type) with a **managed resource group**
-- ✅ Created a custom **Unity Catalog metastore** backed by **ADLS Gen2** (own storage account and container)
-- ✅ Connected Databricks to storage **without keys**, using an **Access Connector (managed identity)** with the *Storage Blob Data Contributor* role
-- ✅ Created **storage credential** and **external location** for governed external data access
-- ✅ Built **managed / external** catalogs, schemas and tables in **4 different storage-location scenarios**
-- ✅ Practised **DROP / UNDROP**, permanent vs temporary **views**, and **external volumes**
-- ✅ Explored **Delta Lake internals**: `_delta_log`, JSON commits, `.crc`, checkpoints
-- ✅ Demonstrated **copy-on-write vs deletion vectors (merge-on-read)** side by side
-- ✅ Used **time travel** and **RESTORE**
-- ✅ Compared **Deep Clone vs Shallow Clone**
-- ✅ Implemented **incremental ingestion with Auto Loader** (`cloudFiles`) and inspected the checkpoint, schema and sink folders
+| ☁️ **Azure setup** | Databricks workspace (Hybrid), managed resource group, ADLS Gen2 storage account with two containers, Access Connector with managed identity, RBAC role assignment |
+| 🏛️ **Unity Catalog** | Custom metastore with own storage root, workspace attachment, admin configuration, storage credential, external location |
+| 🗂️ **Managed vs External** | Four storage scenarios using catalog/schema managed locations and external tables, `DROP` / `UNDROP` behavior |
+| 👁️ **Views & files** | Direct path queries, permanent vs temporary views, external volumes and `/Volumes` paths |
+| 🔺 **Delta Lake** | Table creation, DML, transaction log (`.json`, `.crc`), `DESCRIBE HISTORY`, time travel, `RESTORE` |
+| ⚡ **Deletion vectors** | Copy-on-write vs merge-on-read, file-level comparison between two tables |
+| 🧬 **Clones** | Deep clone vs shallow clone |
+| 🌊 **Auto Loader** | `cloudFiles` streaming ingestion, schema location, checkpoint, `availableNow` trigger, generated folder structure |
+| 🔐 **Governance study** | Row filters, column masks, ABAC, tags, lineage, system tables, Delta Sharing, Lakehouse Federation |
 
 ---
 
-## 🏗 Architecture
+## 🏗️ Architecture
 
-### High-level (Azure + Databricks + Unity Catalog)
+### High-level architecture
 
 ```mermaid
 flowchart TB
     subgraph CP["Databricks Control Plane (managed by Databricks)"]
-        UI["Workspace UI / Notebooks / Jobs"]
-        UC["Unity Catalog Metastore<br/>vivmodernmegastore"]
+        UI["Workspace UI, Notebooks, Jobs"]
+        UC["Unity Catalog Metastore<br/>(metadata, permissions, lineage)"]
     end
 
-    subgraph CMP["Compute Plane (my Azure subscription)"]
-        CL["Cluster: Vivek's Compute<br/>DBR 18 LTS, Single node<br/>Standard_D4ds_v5"]
-        MRG["Managed RG: RGModernDBManaged<br/>VM, Disk, VNet, NIC, NSG"]
+    subgraph CMP["Compute Plane (my Azure subscription - managed resource group)"]
+        CL["Cluster: Vivek's Compute<br/>DBR 18 LTS, single node"]
     end
 
-    subgraph ST["Azure Storage Account: vivstandardisedzone (ADLS Gen2)"]
-        C1["Container: data-mgmt-dev<br/>Metastore root (MANAGED data)"]
-        C2["Container: mycontainer<br/>EXTERNAL data, volumes, Delta labs, Auto Loader"]
+    subgraph AZ["Azure Storage - ADLS Gen2 (vivstandardisedzone)"]
+        C1[("data-mgmt-dev<br/>Metastore root: MANAGED data")]
+        C2[("mycontainer<br/>EXTERNAL tables, volumes, raw files")]
     end
 
-    AC["Access Connector<br/>accessvivstandardisedzone<br/>(Managed Identity)"]
+    AC["Access Connector<br/>(Managed Identity)<br/>Storage Blob Data Contributor"]
 
-    UI --> UC
     UI --> CL
-    CL --> MRG
-    CL -- "1. ask permission" --> UC
-    UC -- "2. short-lived credentials" --> CL
-    CL -- "3. read / write" --> ST
+    CL <-->|"permission check + short-lived credentials"| UC
     UC --> AC
-    AC -- "RBAC: Storage Blob Data Contributor" --> ST
+    AC -->|RBAC| C1
+    AC -->|RBAC| C2
+    CL -->|"read / write Delta + Parquet"| C1
+    CL -->|"read / write Delta + Parquet"| C2
 ```
 
-### Unity Catalog object hierarchy used in this project
+### Unity Catalog object hierarchy
 
 ```mermaid
 flowchart TD
     M["Metastore: vivmodernmegastore"] --> SC["Storage Credential: vivcreds"]
-    SC --> EL["External Location: myextlocation<br/>mycontainer"]
+    SC --> EL["External Location: myextlocation"]
     M --> CAT1["Catalog: man_cata"]
     M --> CAT2["Catalog: ext_cata<br/>(own managed location)"]
     CAT1 --> S1["Schema: man_schema"]
-    S1 --> T1["Managed table: man_table"]
-    S1 --> T2["External table: ext_table, deltatbl, deltatbl2"]
-    S1 --> V1["Views: view1, temp_view"]
-    S1 --> VOL["External volume: extvolume"]
-    S1 --> CL1["Clones: deepclonetbl, shallowclonetbl"]
-    CAT2 --> S2["Schema: man_schema, ext_schema"]
+    CAT2 --> S2["Schema: man_schema"]
+    CAT2 --> S3["Schema: ext_schema<br/>(own managed location)"]
+    S1 --> T1["Managed table"]
+    S1 --> T2["External table"]
+    S1 --> V1["View"]
+    S1 --> VOL["External Volume"]
 ```
 
-### Where does the data go? (managed location resolution)
+### Managed storage resolution (where does a managed table go?)
 
-```
-Table's catalog/schema has a MANAGED LOCATION?
-        │
-        ├── Schema level  → use schema location      (most specific)
-        ├── Catalog level → use catalog location
-        └── Neither       → use metastore root storage (data-mgmt-dev)
+```mermaid
+flowchart LR
+    A["CREATE TABLE (managed)"] --> B{"Schema has<br/>MANAGED LOCATION?"}
+    B -- Yes --> R1["Store in schema location"]
+    B -- No --> C{"Catalog has<br/>MANAGED LOCATION?"}
+    C -- Yes --> R2["Store in catalog location"]
+    C -- No --> R3["Store in metastore root<br/>(data-mgmt-dev)"]
 ```
 
 ---
 
-## 🧰 Tech Stack
+## 🛠️ Technology Stack
 
 | Layer | Technology |
 |---|---|
-| **Cloud** | Microsoft Azure (Resource Groups, Storage Accounts, Access Connector, RBAC, Entra ID) |
-| **Data platform** | Azure Databricks (Hybrid workspace), Databricks Runtime **18 LTS** |
-| **Governance** | Unity Catalog (metastore, catalogs, schemas, credentials, external locations, volumes) |
-| **Storage** | Azure Data Lake Storage Gen2 (hierarchical namespace), Parquet, Delta Lake |
-| **Processing** | Apache Spark, Spark SQL, PySpark, Structured Streaming |
-| **Ingestion** | Auto Loader (`cloudFiles`) |
-| **Security** | Managed identity, Azure RBAC (*Storage Blob Data Contributor*), MFA |
-| **Tooling** | Databricks notebooks, magic commands (`%sql`, `%python`), `dbutils`, Git/GitHub |
+| Cloud | Microsoft Azure (Resource Groups, Storage Account, Access Connector, RBAC, Entra ID) |
+| Data platform | Azure Databricks (Hybrid workspace), Databricks Runtime 18 LTS |
+| Governance | Unity Catalog (metastore, catalogs, schemas, credentials, external locations, volumes) |
+| Storage | Azure Data Lake Storage Gen2 (hierarchical namespace) |
+| Table format | Delta Lake (Parquet + transaction log), deletion vectors, clones |
+| Processing | Apache Spark, Spark SQL, PySpark, Structured Streaming |
+| Ingestion | Auto Loader (`cloudFiles`) |
+| Security | Managed identity, RBAC, Microsoft Authenticator (MFA) |
+| Documentation | Markdown, Mermaid |
 
 ---
 
-## 🛠 Part 1: Environment Setup, Step by Step
+## 🧾 Environment Reference
 
-> **Goal:** a Unity Catalog-enabled workspace where *all* data lands in **my own** ADLS Gen2 storage and access is secret-less.
+| Item | Value |
+|---|---|
+| Databricks workspace | `VIV_ADB` (workspace type: **Hybrid**) |
+| Managed resource group | `RGModernDBManaged` |
+| Storage account | `vivstandardisedzone` (ADLS Gen2, hierarchical namespace enabled) |
+| Metastore container | `data-mgmt-dev` (managed data) |
+| External container | `mycontainer` (external data) |
+| Access Connector | `accessvivstandardisedzone` |
+| Metastore | `vivmodernmegastore` (region: **Central India**) |
+| Storage credential | `vivcreds` |
+| External location | `myextlocation` |
+| Compute | Vivek's Compute: DBR 18 LTS, single node, `Standard_D4ds_v5`, auto-terminate after 20 minutes |
+| Catalogs | `man_cata`, `ext_cata` |
 
-| # | Step | What I did | Why |
+> 🔒 **Security note:** no keys, secrets or tokens are used or stored anywhere in this project. Access to storage is entirely through a **managed identity (Access Connector) + Azure RBAC**.
+
+---
+
+## 🚀 Part 1: Platform Setup (Azure + Databricks + Unity Catalog)
+
+### Step-by-step flow
+
+```mermaid
+flowchart LR
+    A["1. Create Databricks<br/>workspace"] --> B["2. Sign in to<br/>Account Console + MFA"]
+    B --> C["3. Remove default<br/>metastore"]
+    C --> D["4. Create ADLS Gen2<br/>account + containers"]
+    D --> E["5. Create<br/>Access Connector"]
+    E --> F["6. Grant Storage Blob<br/>Data Contributor"]
+    F --> G["7. Create metastore<br/>+ attach workspace"]
+    G --> H["8. Create compute"]
+    H --> I["9. Configure admin<br/>role"]
+    I --> J["10. Storage credential<br/>+ external location"]
+```
+
+| # | Step | What I did | Why it matters |
 |---|---|---|---|
-| 1 | **Workspace** | Created Azure Databricks workspace `VIV_ADB` (type **Hybrid**), managed RG `RGModernDBManaged` | Hybrid supports classic and serverless compute |
-| 2 | **Account console** | Logged in to `accounts.azuredatabricks.net` with my Entra UPN, set password and Authenticator (MFA) | Account-level objects (metastores, users) are managed here |
-| 3 | **Reset metastore** | Deleted the existing default metastore | To create one on my own storage (fresh learning environment only) |
-| 4 | **Storage** | Created storage account `vivstandardisedzone` (ADLS Gen2) with containers `data-mgmt-dev` (metastore root) and `mycontainer` (external) | Separate **managed** vs **external** data |
-| 5 | **Access Connector** | Created *Access Connector for Azure Databricks* `accessvivstandardisedzone` | Gives Databricks a managed identity (no keys) |
-| 6 | **RBAC** | Storage account → Access control (IAM) → Add role assignment → **Storage Blob Data Contributor** → Managed identity → the access connector | Data-plane permission to read/write/delete blobs |
-| 7 | **Metastore** | Created `vivmodernmegastore` in **Central India**, root `abfss://data-mgmt-dev@vivstandardisedzone.dfs.core.windows.net/`, access connector ID, attached to `VIV_ADB` | Enables Unity Catalog on the workspace |
-| 8 | **Compute** | Created *Vivek's Compute*: DBR **18 LTS**, **single node**, `Standard_D4ds_v5`, auto-terminate **20 min** | Cost-effective learning cluster |
-| 9 | **Admin fix** | Replaced my UPN with my Databricks account identity as admin | "Create catalog" was missing because my UPN had no `CREATE CATALOG` privilege |
-| 10 | **Storage credential** | Created `vivcreds` using the access connector ID | The "ID card" for storage access |
-| 11 | **External location** | Created `myextlocation` → `abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/` using `vivcreds` | Governed "door" to the external container |
+| 1 | **Workspace** | Created `VIV_ADB` (Hybrid) with managed resource group `RGModernDBManaged` | Hybrid supports classic compute and serverless options |
+| 2 | **Account console** | Signed in at `accounts.azuredatabricks.net` using my Entra UPN, set a password and configured Authenticator (MFA) | Account-level features (metastores, users, workspaces) are managed here |
+| 3 | **Metastore cleanup** | Deleted the existing default metastore | So that I could define my **own storage root** and fully control where managed data lives |
+| 4 | **Storage** | Created `vivstandardisedzone` with containers `data-mgmt-dev` and `mycontainer` | Separate managed data from external data |
+| 5 | **Access Connector** | Created `accessvivstandardisedzone` | Gives Databricks a **managed identity**, so no secrets or keys are needed |
+| 6 | **RBAC** | Storage account → Access control (IAM) → Add role assignment → **Storage Blob Data Contributor** → Managed identity → the access connector | The identity needs **data-plane** rights to read/write/delete blobs |
+| 7 | **Metastore** | Created `vivmodernmegastore` in Central India, root path `abfss://data-mgmt-dev@vivstandardisedzone.dfs.core.windows.net/`, linked the access connector, attached `VIV_ADB` | Enables Unity Catalog on the workspace |
+| 8 | **Compute** | Created *Vivek's Compute*: DBR 18 LTS, single node, `Standard_D4ds_v5`, terminate after 20 minutes | Cost-efficient learning cluster; Databricks created VM, disk, VNet and NIC in the managed resource group |
+| 9 | **Admin access** | Replaced my Azure UPN admin identity with my Databricks login as admin | The UPN lacked `CREATE CATALOG`, so catalog creation options were missing |
+| 10 | **External access** | Created storage credential `vivcreds` and external location `myextlocation` → `mycontainer` | Allows governed access to external storage paths |
 
-Behind the scenes, Databricks created **VM, disk, virtual network and network interface** inside `RGModernDBManaged` when the cluster started.
+### 💡 Theory: Control plane vs compute plane
+
+| | Control plane | Compute plane |
+|---|---|---|
+| Owned by | Databricks | Classic: **my subscription**; Serverless: Databricks |
+| Contains | UI, notebooks, jobs, cluster manager, Unity Catalog metadata | VMs / serverless compute that **process data** |
+| Handles customer data? | No (orchestration only) | Yes (reads and writes **my** storage) |
+
+### 💡 Theory: Why an Access Connector?
+
+The **Access Connector for Azure Databricks** wraps a **managed identity**. Unity Catalog uses it to vend **short-lived, down-scoped credentials** to compute, after verifying the user's privileges. Users never see storage keys.
+
+```mermaid
+sequenceDiagram
+    participant U as User / Notebook
+    participant C as Cluster
+    participant UC as Unity Catalog
+    participant AC as Access Connector (Managed Identity)
+    participant S as ADLS Gen2
+
+    U->>C: SELECT * FROM man_cata.man_schema.table
+    C->>UC: Does this user have USE CATALOG, USE SCHEMA, SELECT?
+    UC-->>C: Yes + temporary storage token
+    UC->>AC: Request token for table path
+    AC-->>UC: Scoped credential
+    C->>S: Read files with temporary credential
+    S-->>C: Delta / Parquet data
+    C-->>U: Query result
+```
 
 ---
 
-## 📚 Part 2: Unity Catalog Hands-on
+## 🗂️ Part 2: Unity Catalog Objects (Managed vs External)
 
-### Scenario matrix: where does each table's data live?
+### Concept
 
-| # | Catalog | Schema | Table | Physical storage |
-|---|---|---|---|---|
-| 1 | Managed (default) | Managed (default) | Managed | Metastore root → `data-mgmt-dev` |
-| 2 | **Own `MANAGED LOCATION`** | Default | Managed | `mycontainer/external_catalog` |
-| 3 | Own `MANAGED LOCATION` | **Own `MANAGED LOCATION`** | Managed | `mycontainer/ext_schema` |
-| 4 | Default | Default | **External** (`LOCATION`) | `mycontainer/ext_table/man_table3` |
+| | Managed table | External table |
+|---|---|---|
+| Storage location | Chosen by **Unity Catalog** (GUID folders) | Chosen by **me** via `LOCATION` |
+| `DROP TABLE` | Deletes metadata **and data** (recoverable for 7 days) | Deletes **metadata only**; files remain |
+| `UNDROP` | Supported | Not applicable (recreate table on same path) |
+| Extra privilege | None | `CREATE EXTERNAL TABLE` on the external location |
+| Best for | Default choice, curated data | Data shared with other tools or already in the lake |
 
-<details>
-<summary><b>📄 Click to view the SQL for all scenarios</b></summary>
+### The four scenarios I implemented
 
+#### Scenario 1: Managed catalog → managed schema → managed table
 ```sql
--- Scenario 1: managed catalog, managed schema, managed table
 CREATE CATALOG man_cata;
 CREATE SCHEMA  man_cata.man_schema;
-CREATE TABLE   man_cata.man_schema.man_table (id INT, name STRING) USING DELTA;
 
--- Scenario 2: catalog with its own managed location
+CREATE TABLE man_cata.man_schema.man_table (id INT, name STRING) USING DELTA;
+```
+📍 Stored in the **metastore root** (`data-mgmt-dev`).
+
+#### Scenario 2: Catalog with its own managed location
+```sql
 CREATE CATALOG ext_cata
 MANAGED LOCATION 'abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/external_catalog';
-CREATE SCHEMA ext_cata.man_schema;
-CREATE TABLE  ext_cata.man_schema.man_table2 (id INT, name STRING) USING DELTA;
 
--- Scenario 3: schema with its own managed location
+CREATE SCHEMA ext_cata.man_schema;
+
+CREATE TABLE ext_cata.man_schema.man_table2 (id INT, name STRING) USING DELTA;
+```
+📍 Table is still **managed**, but stored under `mycontainer/external_catalog`.
+
+#### Scenario 3: Schema with its own managed location
+```sql
 CREATE SCHEMA ext_cata.ext_schema
 MANAGED LOCATION 'abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/ext_schema';
-CREATE TABLE ext_cata.ext_schema.man_table3 (id INT, name STRING) USING DELTA;
 
--- Scenario 4: external table (LOCATION clause)
+CREATE TABLE ext_cata.ext_schema.man_table3 (id INT, name STRING) USING DELTA;
+```
+📍 Schema location **overrides** the catalog location.
+
+#### Scenario 4: External table
+```sql
 CREATE TABLE man_cata.man_schema.ext_table (id INT, name STRING)
 USING DELTA
 LOCATION 'abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/ext_table/man_table3';
 ```
-</details>
+📍 **I** own the folder; dropping the table keeps the files.
 
-### Managed vs External table
+### Summary
 
-| | Managed | External |
-|---|---|---|
-| Storage controlled by | Unity Catalog | Me (`LOCATION`) |
-| `DROP TABLE` | Metadata **and data** removed | Only metadata removed, files stay |
-| `UNDROP` | ✅ within 7 days | n/a (recreate with same path) |
-| Requires external location | No | Yes |
+| # | Catalog | Schema | Table type | Physical location |
+|---|---|---|---|---|
+| 1 | default | default | Managed | `data-mgmt-dev` (metastore root) |
+| 2 | own location | default | Managed | `mycontainer/external_catalog` |
+| 3 | own location | own location | Managed | `mycontainer/ext_schema` |
+| 4 | default | default | **External** | `mycontainer/ext_table/man_table3` |
 
+### DROP and UNDROP
 ```sql
-DROP   TABLE man_cata.man_schema.man_table;   -- disappears from workspace
+DROP TABLE   man_cata.man_schema.man_table;   -- disappears from the workspace
 UNDROP TABLE man_cata.man_schema.man_table;   -- restored (within 7 days)
 ```
+**Observed:** after `DROP`, the table vanished from the workspace but its files were still physically present in Azure storage during the recovery window.
 
-### Querying files, views and volumes
+---
 
+## 👁️ Part 3: Views, Files and Volumes
+
+### Querying files directly
 ```sql
--- Query files directly by path
-SELECT * FROM delta.`abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/ext_table/man_table3` WHERE id = 1;
+INSERT INTO man_cata.man_schema.ext_table VALUES (1,'Viv'), (2,'Bhand'), (3,'Raw Agent');
 
--- Permanent view (stored in Unity Catalog, shareable, governed)
+SELECT * FROM delta.`abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/ext_table/man_table3`
+WHERE id = 1;
+```
+
+### Permanent vs temporary views
+```sql
+-- Permanent: registered in Unity Catalog
 CREATE VIEW man_cata.man_schema.view1 AS
-SELECT * FROM delta.`abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/ext_table/man_table3` WHERE id = 1;
+SELECT * FROM delta.`abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/ext_table/man_table3`
+WHERE id = 1;
 
--- Temporary view (session-only, not governed)
+-- Temporary: lives only in this Spark session
 CREATE OR REPLACE TEMP VIEW temp_view AS
-SELECT * FROM delta.`abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/ext_table/man_table3` WHERE id = 1;
+SELECT * FROM delta.`abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/ext_table/man_table3`
+WHERE id = 1;
 ```
 
 | | Permanent view | Temporary view |
 |---|---|---|
-| Stored in | Unity Catalog | Spark session memory |
+| Stored in | Unity Catalog | Session memory |
+| Name | `catalog.schema.view` | `view_name` |
 | Lifetime | Until dropped | Until session ends |
 | Shareable / grantable | ✅ | ❌ |
+| Appears in lineage | ✅ | ❌ |
+
+### Volumes (governed file access)
+
+A **volume** gives Unity Catalog governance to **non-tabular files** (CSV, JSON, images, PDFs...). Files are accessed with `/Volumes/<catalog>/<schema>/<volume>/<path>`.
 
 ```python
-# External Volume: governed access to files
 dbutils.fs.mkdirs('abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/volumes')
 ```
 ```sql
 CREATE EXTERNAL VOLUME man_cata.man_schema.extvolume
 LOCATION 'abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/volumes';
-
+```
+```python
+dbutils.fs.cp(
+  'abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/source/Sales',
+  'abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/volumes/Sales'
+)   # use recurse=True if "Sales" is a folder
+```
+```sql
 SELECT * FROM csv.`/Volumes/man_cata/man_schema/extvolume/Sales`;
 ```
 
 ---
 
-## 🔬 Part 3: Delta Lake Deep Dive
+## 🔺 Part 4: Delta Lake Internals
 
-> **Delta table = Parquet data files + `_delta_log` transaction log.**
-> Parquet files are **immutable**, so every change creates new files and a new log entry.
+### Theory: what is a Delta table?
 
-### 3.1 Table layout in storage
+> **Delta table = Parquet data files + `_delta_log` (transaction log).**
+
+Parquet files are **immutable**. Every change is made by writing **new files** and recording in the log which files belong to the current version of the table. This single idea explains ACID transactions, updates, time travel, restore and clones.
 
 ```
-deltalake/deltatbl/
+deltatbl/
 ├── _delta_log/
-│   ├── 00000000000000000000.json      ← version 0 (commit: actions)
-│   ├── 00000000000000000000.crc       ← version 0 checksum / summary
+│   ├── 00000000000000000000.json   ← commit (actions: protocol, metaData, add, remove, commitInfo)
+│   ├── 00000000000000000000.crc    ← per-version checksum / summary
 │   ├── ...
-│   ├── 00000000000000000010.checkpoint.parquet
-│   └── _last_checkpoint
-├── part-00000-....snappy.parquet      ← data files
+│   └── 00000000000000000010.checkpoint.parquet   ← state snapshot (about every 10 commits)
+├── part-00000-....snappy.parquet   ← data files
 └── part-00001-....snappy.parquet
 ```
 
-| File | Purpose |
-|---|---|
-| `NNN.json` | Commit file: actions `add`, `remove`, `metaData`, `protocol`, `commitInfo` |
-| `NNN.crc` | Per-version checksum/summary (size, file count, metadata) for validation and speed |
-| `*.checkpoint.parquet` | Full table state every ~10 commits (fast snapshot loading) |
-| `_last_checkpoint` | Pointer to the latest checkpoint |
-
-### 3.2 Experiment A: classic UPDATE (deletion vectors **disabled**), i.e. copy-on-write
-
+### Hands-on: create a table and turn deletion vectors **off**
 ```sql
 CREATE TABLE man_cata.man_schema.deltatbl (id INT, name STRING, city STRING)
 USING DELTA
 LOCATION 'abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/deltalake/deltatbl';
 
-ALTER TABLE man_cata.man_schema.deltatbl SET TBLPROPERTIES ('delta.enableDeletionVectors' = false);
+ALTER TABLE man_cata.man_schema.deltatbl
+SET TBLPROPERTIES ('delta.enableDeletionVectors' = false);   -- classic copy-on-write behavior
 
-INSERT INTO man_cata.man_schema.deltatbl VALUES (1,'aa','delhi'),(2,'bb','mumbai'),(3,'cc','chennai');
+INSERT INTO man_cata.man_schema.deltatbl VALUES (1,'aa','delhi'), (2,'bb','mumbai'), (3,'cc','chennai');
 
+DESCRIBE EXTENDED man_cata.man_schema.deltatbl;
+SELECT * FROM man_cata.man_schema.deltatbl;
+```
+
+### UPDATE (copy-on-write)
+```sql
 UPDATE man_cata.man_schema.deltatbl SET city = 'toronto' WHERE id = 1;
 ```
 
-**Observation in Azure Storage:** after the update there were **two Parquet files**.
+**Observed in Azure storage:** before the update there was **one Parquet file** with 3 rows; after the update there were **two Parquet files**.
 
 ```
 BEFORE UPDATE (v2)              AFTER UPDATE (v3)
-File 1: 3 rows (active)         File 1: 3 rows  → marked "removed" in log (kept for time travel)
-                                File 2: 3 rows  → NEW file with the latest data (active)
+
+File 1 [1 aa delhi  ]          File 1 [1 aa delhi  ]   ← "removed" in the log, still on storage
+       [2 bb mumbai ]                 [2 bb mumbai ]
+       [3 cc chennai]                 [3 cc chennai]
+                               File 2 [1 aa toronto]   ← new active file (latest data)
+                                      [2 bb mumbai ]
+                                      [3 cc chennai]
 ```
 
-**Why:** Parquet can't be edited in place. Delta **rewrites the whole affected file**, then records `remove File 1` and `add File 2` in the log. The old file stays on storage until `VACUUM`, which is what makes **time travel** possible.
+| Why? | Explanation |
+|---|---|
+| Parquet is immutable | The row cannot be edited in place, so the whole file is rewritten with the change |
+| `remove` ≠ delete | The log marks File 1 as *not part of the current version*, but it stays so that **older versions can be read** |
+| Physical cleanup | Only `VACUUM` deletes it (default retention: 7 days) |
 
-### 3.3 Time travel and RESTORE
+### Transaction log in action
 
-```sql
-DESCRIBE HISTORY man_cata.man_schema.deltatbl;                              -- audit trail of all versions
-SELECT * FROM man_cata.man_schema.deltatbl VERSION AS OF 2;                 -- read old data
-RESTORE man_cata.man_schema.deltatbl TO VERSION AS OF 2;                    -- revert (creates a new version)
-```
-
-| Version | Operation | Active file |
+| Version | Operation | Log actions |
 |---|---|---|
-| 0 | CREATE TABLE | – |
-| 1 | SET TBLPROPERTIES | – |
-| 2 | WRITE (INSERT) | File 1 |
-| 3 | UPDATE | File 2 |
-| 4 | RESTORE (to v2) | File 1 |
+| 0 | `CREATE TABLE` | `protocol`, `metaData` |
+| 1 | `SET TBLPROPERTIES` | `metaData` (DV property) |
+| 2 | `WRITE` (INSERT) | `add` File 1 (with min/max statistics) |
+| 3 | `UPDATE` | `remove` File 1 + `add` File 2 |
+| 4 | `RESTORE` | `remove` File 2 + `add` File 1 |
 
-`RESTORE` copies **no data**; it only re-points the log to the older files, so it is fast.
+- **`.json` file** = the authoritative record of one commit (list of actions).
+- **`.crc` file** = a small checksum/summary of the table state after that commit (size, file count, metadata, protocol) used for validation and faster snapshot loading.
+- **Checkpoint** = full state snapshot so readers do not replay every commit.
 
-### 3.4 Experiment B: UPDATE with **deletion vectors enabled** (merge-on-read)
+### History, time travel and RESTORE
+```sql
+DESCRIBE HISTORY man_cata.man_schema.deltatbl;
 
+SELECT * FROM man_cata.man_schema.deltatbl VERSION AS OF 2;     -- query old data
+
+RESTORE man_cata.man_schema.deltatbl TO VERSION AS OF 2;        -- bring old data back
+```
+
+✅ **Result:** the table returned to the pre-update data. `RESTORE` **copies no data**; it writes a new commit that points back to the older file, so history is preserved (a new version is added).
+
+---
+
+## ⚡ Part 5: Deletion Vectors
+
+### Hands-on: same operations on a table with deletion vectors **ON** (default)
 ```sql
 CREATE TABLE man_cata.man_schema.deltatbl2 (id INT, name STRING, city STRING)
 USING DELTA
 LOCATION 'abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net/deltalake/deltatbl2';
 
-INSERT INTO man_cata.man_schema.deltatbl2 VALUES (1,'aa','delhi'),(2,'bb','mumbai'),(3,'cc','chennai');
+INSERT INTO man_cata.man_schema.deltatbl2 VALUES (1,'aa','delhi'), (2,'bb','mumbai'), (3,'cc','chennai');
 
 UPDATE man_cata.man_schema.deltatbl2 SET city = 'seattle' WHERE id = 1;
 ```
 
-**Observation in Azure Storage:** **3 Parquet files + 1 deletion vector (`.bin`) file.**
+**Observed in Azure storage:** **3 Parquet files + 1 deletion vector (`.bin`) file.**
 
-| Item | Meaning |
+### How to read that result
+
+| Item | Role |
 |---|---|
-| Original data files (2) | Written by the insert (Spark writes files in parallel) |
-| `part-…-C.parquet` | New small file with **only the updated row** `(1,aa,seattle)` |
-| `deletion_vector_<uuid>.bin` | Bitmap of **row positions** to ignore (hides the old `id = 1` row) |
+| Parquet file **A** | Original data file containing the row with `id = 1` (and another row); that row is now hidden by the deletion vector |
+| Parquet file **B** | Original data file, untouched |
+| Parquet file **C** | **New small file** containing only the updated row `(1,aa,seattle)` |
+| `deletion_vector_<uuid>.bin` | Compact bitmap of **row positions** to ignore in file A (it stores positions, not row values) |
 
 ```
-File A [row0: 1 aa delhi ]  ← hidden by the DV
-       [row1: 2 bb mumbai]  ← still visible
-File B [row0: 3 cc chennai] ← untouched
-File C [row0: 1 aa seattle] ← new version of the changed row
+AFTER INSERT                         AFTER UPDATE (deletion vectors ON)
+
+File A [0] 1 aa delhi                File A [0] 1 aa delhi    ← masked by DV (hidden at read time)
+       [1] 2 bb mumbai                      [1] 2 bb mumbai   ← visible
+File B [0] 3 cc chennai              File B [0] 3 cc chennai  ← untouched
+                                     File C [0] 1 aa seattle  ← new, only the changed row
+                                     deletion_vector_<uuid>.bin ← "File A, row 0 deleted"
 ```
 
-The log's `add` action for File A carries a `deletionVector` descriptor (`storageType`, `pathOrInlineDv`, `offset`, `sizeInBytes`, `cardinality`).
+> The exact number of files produced by a small `INSERT` can vary with cluster parallelism. The mechanism (original files stay, a DV masks changed rows, a small new file holds the new values) is the same.
 
-### 3.5 Copy-on-write vs deletion vectors (my two tables)
+### Copy-on-write vs merge-on-read
 
-| | `deltatbl` (DV off) | `deltatbl2` (DV on) |
+| | `deltatbl` (DV **off**) | `deltatbl2` (DV **on**) |
 |---|---|---|
-| Strategy | Copy-on-write | Merge-on-read |
-| One-row UPDATE | Rewrites the whole file | Writes a tiny DV + 1-row file |
-| Rows rewritten | Whole file (`numCopiedRows > 0`) | Only the changed row |
-| Write cost | High (write amplification) | **Low (higher throughput)** |
-| Cleanup | `VACUUM` | `OPTIMIZE` / `REORG ... APPLY (PURGE)` + `VACUUM` |
+| Strategy | **Copy-on-write** | **Merge-on-read** |
+| UPDATE of one row | Rewrites the **entire file** | Writes a DV + a tiny file with just the new row |
+| Write cost | High (write amplification) | **Low** |
+| Read | Simple | Applies the DV while reading (cleaned up by `OPTIMIZE`) |
 
-> Deletion vectors are on by default in current Databricks configurations because they greatly reduce write amplification for `UPDATE` / `DELETE` / `MERGE`.
+### Why deletion vectors improve write performance
+- Far **less I/O** for `UPDATE`, `DELETE` and `MERGE` (no rewriting of large files for a few changed rows).
+- **Lower compute and storage cost**, shorter write transactions and fewer conflicts between concurrent writers.
+- Maintenance: `OPTIMIZE` or `REORG TABLE ... APPLY (PURGE)` rewrites files so deleted rows are physically removed (important for GDPR-style erasure, followed by `VACUUM`).
 
 ---
 
-## 🧬 Part 4: Deep Clone vs Shallow Clone
+## 🧬 Part 6: Deep Clone vs Shallow Clone
 
 ```sql
-CREATE TABLE man_cata.man_schema.deepclonetbl    DEEP    CLONE man_cata.man_schema.deltatbl;
-CREATE TABLE man_cata.man_schema.shallowclonetbl SHALLOW CLONE man_cata.man_schema.man_table;
+-- Deep clone: copies metadata AND data files
+CREATE TABLE man_cata.man_schema.deepclonetbl
+DEEP CLONE man_cata.man_schema.deltatbl;
+
+-- Shallow clone: copies only the transaction log, references the source files
+CREATE TABLE man_cata.man_schema.shallowclonetbl
+SHALLOW CLONE man_cata.man_schema.man_table;
+```
+
+```
+DEEP      source files ──copy──► clone files        independent, slower, backup-safe
+SHALLOW   source files ◄─refer── clone log          instant, depends on source, test-friendly
 ```
 
 | | **Deep clone** | **Shallow clone** |
 |---|---|---|
-| Copies data files | ✅ Yes | ❌ No (references source files) |
-| Creation speed | Slower | Seconds |
-| Extra storage | Full copy | ~0 initially |
+| Data files | Copied | **Referenced** from the source |
+| Creation time | Proportional to data size | Seconds |
+| Extra storage | Full copy | Almost none at first |
 | Independent of source | ✅ | ❌ (depends on source files) |
-| Safe after source `VACUUM`/drop | ✅ | ⚠️ May break |
-| Typical use | Backup, DR, migration | Dev/test, safe experiments |
+| Safe if the source is vacuumed/dropped | ✅ | ⚠️ May break |
+| Typical use | Backup, DR, migration, archive | Dev/test, safe experiments, sandboxes |
 
-```
-DEEP     source files ──copy──►  clone files        (independent)
-SHALLOW  source files ◄─refer──  clone's _delta_log  (instant, depends on source)
-```
+Writes to a clone never change the source, and changes to the source do not flow into the clone.
 
 ---
 
-## 🌊 Part 5: Auto Loader (Incremental Ingestion)
+## 🌊 Part 7: Auto Loader (Incremental Ingestion)
 
+### What is Auto Loader?
+**Auto Loader** (`cloudFiles`) is a Structured Streaming source that **incrementally discovers and ingests only new files** from cloud storage with **exactly-once** guarantees and built-in **schema inference and evolution**.
+
+### The code
 ```python
 base = "abfss://mycontainer@vivstandardisedzone.dfs.core.windows.net"
 
 df = (spark.readStream.format("cloudFiles")
-        .option("cloudFiles.format", "parquet")
-        .option("cloudFiles.schemaLocation", f"{base}/autosink/schema")
-        .load(f"{base}/autosource"))
+    .option("cloudFiles.format", "parquet")
+    .option("cloudFiles.schemaLocation", f"{base}/autosink/schema")
+    .load(f"{base}/autosource"))
 
 (df.writeStream.format("parquet")
     .option("checkpointLocation", f"{base}/autosink/checkpoint")
@@ -392,237 +528,219 @@ df = (spark.readStream.format("cloudFiles")
     .start(f"{base}/autosink/data"))
 ```
 
-| Piece | Role |
+| Line | Purpose |
 |---|---|
-| `format("cloudFiles")` | Auto Loader streaming source |
+| `format("cloudFiles")` | Use the Auto Loader source |
 | `cloudFiles.format` | Format of incoming files |
-| `cloudFiles.schemaLocation` | Stores inferred schema and its evolution history |
-| `checkpointLocation` | Stores stream progress **and** the processed-file state (exactly-once) |
-| `trigger(availableNow=True)` | Process everything available, then stop (incremental batch) |
+| `cloudFiles.schemaLocation` | Folder where the inferred schema (and its evolution history) is stored |
+| `.load(".../autosource")` | Input directory to watch |
+| `checkpointLocation` | Stores stream progress and the list of already-processed files |
+| `trigger(availableNow=True)` | Process everything currently available, then **stop** (incremental batch) |
+| `.start(".../autosink/data")` | Output path |
 
-### What the run created in storage
+### How it works internally
+
+```mermaid
+flowchart LR
+    F["New files land in<br/>autosource/"] --> D["1. Discovery<br/>(directory listing or<br/>file notifications)"]
+    D --> S["2. State check<br/>(RocksDB in checkpoint:<br/>already processed?)"]
+    S --> SC["3. Schema<br/>inference / evolution<br/>(schemaLocation)"]
+    SC --> P["4. Micro-batch<br/>processing"]
+    P --> O["Output sink<br/>(Parquet / Delta)"]
+    P --> CK["Commit offsets +<br/>mark files processed"]
+```
+
+### Folders and files created after running
 
 ```
-autosink/
-├── schema/_schemas/0              ← inferred schema (versioned)
-├── checkpoint/
-│   ├── metadata                   ← query id
-│   ├── offsets/0                  ← planned batch 0
-│   ├── commits/0                  ← batch 0 completed
-│   └── sources/0/rocksdb/         ← state: which files were already ingested
-└── data/
-    ├── part-*.snappy.parquet      ← ingested output
-    └── _spark_metadata/0          ← file-sink log (committed files)
+mycontainer/
+├── autosource/                       ← input files
+└── autosink/
+    ├── schema/_schemas/0             ← inferred schema (versioned, JSON)
+    ├── checkpoint/
+    │   ├── metadata                  ← stream (query) id
+    │   ├── offsets/0                 ← planned work for batch 0
+    │   ├── commits/0                 ← batch 0 completed
+    │   └── sources/0/rocksdb/        ← processed-file state (exactly-once)
+    └── data/
+        ├── part-*.snappy.parquet     ← ingested data
+        └── _spark_metadata/0         ← files committed by batch 0 (file sink log)
 ```
 
-### How it behaves
-
-| Situation | Result |
+| Scenario | Result |
 |---|---|
-| Run again, no new files | Nothing processed |
-| New files added to `autosource` | **Only new files** ingested (`offsets/1`, `commits/1`, new part file) |
-| Checkpoint folder deleted | Everything re-ingested (duplicates) |
-| New column arrives | Fails once, schema updated (`_schemas/1`), rerun succeeds |
+| Run again with **no new files** | Nothing is processed |
+| Add **new files** and run again | Only the new files are read (`offsets/1`, `commits/1`, new output file) |
+| Delete the **checkpoint** | Everything is re-ingested (duplicates possible) |
+| New column appears | With default `addNewColumns`, the run fails once, the schema file is updated and the next run succeeds |
+
+### Why Auto Loader instead of a plain file read?
+
+| | Plain batch read | Spark file stream | **Auto Loader** |
+|---|---|---|---|
+| Incremental | ❌ | ✅ | ✅ |
+| Scales to millions of files | ❌ | ❌ (relists directory) | ✅ |
+| Schema evolution + `_rescued_data` | Manual | Limited | ✅ Built-in |
+| Exactly-once | Manual | ✅ | ✅ |
+
+> 💡 In production the usual pattern is a **Delta sink** (`.toTable("catalog.schema.bronze_table")`) instead of raw Parquet, which adds ACID, history and governance.
 
 ---
 
-## 🧠 Core Concepts in Short
+## 🔐 Governance Capabilities Studied
 
-<details open>
-<summary><b>Databricks and the Lakehouse</b></summary>
+Beyond the hands-on parts, I studied the Unity Catalog governance model from the Microsoft Learn documentation. Details and examples are in the guide (`docs/`).
 
-**Databricks** is a unified data and AI platform built by the creators of Apache Spark. The **Lakehouse** combines cheap, open data-lake storage with warehouse features such as ACID transactions, schema enforcement, governance and fast SQL.
-</details>
-
-<details open>
-<summary><b>Control plane vs compute plane</b></summary>
-
-- **Control plane** (managed by Databricks): UI, notebooks, jobs, cluster manager, Unity Catalog metadata.
-- **Compute plane**: where data is processed: **classic** (VMs in my subscription, inside the managed resource group) or **serverless** (in Databricks' subscription).
-- **My data always stays in my own ADLS Gen2 storage.**
-</details>
-
-<details open>
-<summary><b>Azure fundamentals</b></summary>
-
-`Tenant → Subscription → Resource Group → Resource`. A **resource group** is a logical container for resources with the same lifecycle. A **storage account** offers Blob, Files, Queues and Tables; **ADLS Gen2** adds a hierarchical namespace (true folders, atomic renames, `abfss://`), which Delta and Unity Catalog require.
-</details>
-
-<details open>
-<summary><b>Unity Catalog</b></summary>
-
-Unified governance for data and AI assets. Hierarchy: **Metastore → Catalog → Schema → Table / View / Volume**. Gives central `GRANT`/`REVOKE` permissions (with inheritance), lineage, auditing, discovery, sharing, and secure storage access through **storage credentials** and **external locations**.
-
-**Without UC:** per-workspace Hive metastore, 2-level names, mounts and shared keys, no lineage.
-**With UC:** one account-wide metastore, 3-level names, central permissions, secret-less storage access, lineage and audit.
-</details>
-
-<details open>
-<summary><b>Storage credential, external location, access connector</b></summary>
-
-- **Access Connector**: Azure resource holding a managed identity; needs *Storage Blob Data Contributor* on the storage account.
-- **Storage credential** = **who** (the identity). **External location** = **where** (path + credential), governed by grants.
-</details>
-
-<details open>
-<summary><b>Managed vs external, views, volumes</b></summary>
-
-- **Managed tables**: Unity Catalog owns location and lifecycle; dropping deletes data (7-day `UNDROP` window).
-- **External tables**: you own the files; dropping removes only metadata.
-- **Permanent views** live in Unity Catalog; **temp views** live only in the session.
-- **Volumes** give governed access to non-tabular files via `/Volumes/<catalog>/<schema>/<volume>/...`.
-</details>
-
-<details open>
-<summary><b>Delta Lake</b></summary>
-
-Open table format (Parquet + transaction log) providing **ACID transactions, time travel, schema enforcement/evolution, DML (`UPDATE`/`DELETE`/`MERGE`), data skipping and streaming support**. Readers always see a consistent snapshot; writers use optimistic concurrency control.
-</details>
-
-<details open>
-<summary><b>Deletion vectors</b></summary>
-
-A side file marking which **row positions** in a Parquet file are deleted, so row-level changes don't rewrite whole files (**merge-on-read**). Reads apply the vector; `OPTIMIZE` / `REORG ... APPLY (PURGE)` later cleans it up.
-</details>
-
-<details open>
-<summary><b>Clones</b></summary>
-
-**Deep clone** copies metadata and data (independent copy). **Shallow clone** copies only the log and references source files (instant, cheap, depends on the source).
-</details>
-
-<details open>
-<summary><b>Auto Loader</b></summary>
-
-A Structured Streaming source (`cloudFiles`) that incrementally discovers new files at scale, tracks processed files in the checkpoint (RocksDB) for **exactly-once** ingestion, and supports **schema inference/evolution** with a `_rescued_data` safety column.
-</details>
-
----
-
-## 🚀 Advantages of This Approach
-
-| Area | Advantage |
+| Capability | Summary |
 |---|---|
-| 🔐 **Security** | No keys or secrets: managed identity + RBAC; short-lived, down-scoped credentials issued by Unity Catalog |
-| 🧭 **Governance** | One metastore for all workspaces; central permissions, lineage, audit and discovery |
-| 💾 **Data ownership** | All data stays in **my own** ADLS Gen2 in open formats (no vendor lock-in of the data) |
-| 🧱 **Reliability** | Delta ACID transactions prevent partial/corrupt writes; consistent snapshot reads |
-| ⏪ **Recoverability** | Time travel and `RESTORE` undo mistakes; `UNDROP` recovers dropped managed tables |
-| ⚡ **Performance** | Deletion vectors cut write amplification; data skipping via statistics; `OPTIMIZE` compaction |
-| 💰 **Cost efficiency** | Single-node cluster with 20-min auto-terminate; shallow clones need almost no storage; `availableNow` runs only when needed |
-| 🔄 **Incremental ingestion** | Auto Loader processes only new files with exactly-once guarantees and schema evolution |
-| 🧪 **Safe testing** | Shallow clones let me test risky changes without copying data |
-| 🧩 **Separation of concerns** | Separate containers for managed and external data; clear storage-location hierarchy |
+| **Privileges and inheritance** | `USE CATALOG` + `USE SCHEMA` + `SELECT` are all needed to read a table; grants inherit downwards |
+| **Admin roles** | Account admin, metastore admin, workspace admin |
+| **Storage governance** | Storage credentials, external locations, volumes (replace mounts and keys) |
+| **Row filters and column masks** | Fine-grained security via SQL functions |
+| **ABAC and tags** | Policies driven by governed tags such as `sensitivity = pii` |
+| **Lineage** | Automatic table and column level lineage |
+| **Auditing and system tables** | `system.access.audit`, lineage and billing tables |
+| **Delta Sharing** | Open protocol for sharing live data without copying |
+| **Lakehouse Federation** | Query external databases in place, governed by Unity Catalog |
+| **Workspace-catalog binding** | Restrict which workspaces can use a catalog (e.g. prod isolation) |
+
+### Without vs with Unity Catalog
+
+| | Without Unity Catalog | With Unity Catalog |
+|---|---|---|
+| Scope | Per workspace (Hive metastore) | Account-wide, shared by workspaces |
+| Namespace | `schema.table` | `catalog.schema.table` |
+| Storage access | Mounts, keys, shared credentials | Credentials + external locations |
+| Security | Cluster / table ACLs | Central `GRANT`/`REVOKE`, row/column security |
+| Lineage and audit | Not available / scattered | Built in |
 
 ---
 
-## 🎓 Key Learnings
+## ✅ Key Advantages of This Architecture
 
-1. **Metadata and data are separate.** Unity Catalog stores metadata/permissions; ADLS Gen2 stores the actual files.
-2. **A Databricks-to-storage connection needs three things:** an Access Connector (identity), an RBAC role on the storage (*Storage Blob Data Contributor*, a **data-plane** role), and a storage credential + external location in Unity Catalog.
-3. **Managed storage resolves at the lowest level available:** schema → catalog → metastore root.
-4. **To read a table you need all three:** `USE CATALOG`, `USE SCHEMA` and `SELECT`. My missing "create catalog" button was a privilege issue, not a bug.
-5. **Managed vs external is about lifecycle ownership**, not about where the files are physically stored (a catalog with its own location still holds *managed* tables).
-6. **Parquet files are immutable.** Every Delta change is "new files + a log entry"; this single idea explains updates, time travel, restore, clones and `VACUUM`.
-7. **`remove` in the log is not deletion from storage.** Physical deletion happens only with `VACUUM` after the retention period (default 7 days).
-8. **Deletion vectors change the physical pattern of an UPDATE:** instead of rewriting a file, Delta writes a small DV + a new file with only the changed rows.
-9. **Deep vs shallow clone** is a trade-off between independence/safety and speed/cost.
-10. **Auto Loader's checkpoint is its memory.** Deleting it means reprocessing everything.
-11. **Always verify theory by inspecting storage and `_delta_log`**: `DESCRIBE HISTORY`, `DESCRIBE DETAIL`, and reading the JSON commits makes the concepts concrete.
+| Advantage | How the project demonstrates it |
+|---|---|
+| 🔐 **Secretless security** | Managed identity + RBAC; no storage keys, SAS tokens or passwords in code |
+| 🏛️ **Centralized governance** | One metastore governs tables, files (volumes) and storage access across workspaces |
+| 📍 **Controlled data placement** | Catalog/schema managed locations decide exactly which container holds which data |
+| 💸 **Open, low-cost storage** | Data stays in the customer's ADLS Gen2 as open Parquet/Delta files, with no vendor lock-in on the data |
+| 🔁 **Reliability** | Delta ACID transactions and the transaction log prevent partial or corrupt writes |
+| ⏪ **Recoverability** | Time travel, `RESTORE`, and `UNDROP` allow quick recovery from mistakes |
+| ⚡ **Efficient updates** | Deletion vectors avoid rewriting whole files for small changes |
+| 🧪 **Safe experimentation** | Shallow clones allow testing on production-like data without copying it |
+| 🌊 **Scalable incremental ingestion** | Auto Loader processes only new files with exactly-once guarantees |
+| 💰 **Cost control** | Single-node cluster, 20-minute auto-termination, `availableNow` trigger for batch-style streaming |
 
 ---
 
-## 🧗 Challenges and How I Solved Them
+## 🎓 What I Learned
+
+**Cloud and platform**
+- How Azure organizes resources (tenant → subscription → resource group → resource) and why a **managed resource group** exists.
+- The difference between the **control plane** and **compute plane**, and what Databricks creates in my subscription (VMs, disks, VNet, NICs).
+- Why **ADLS Gen2** (hierarchical namespace) is needed, and how `abfss://` paths are built.
+- Why **managed identity + a data-plane role** (Storage Blob Data Contributor) is the correct way to grant storage access, and why *Contributor* alone is not enough.
+
+**Unity Catalog**
+- How the **metastore** stores metadata only, while data lives in my storage.
+- How managed storage is resolved: **schema → catalog → metastore root**.
+- How **storage credentials** (who) and **external locations** (where) work together.
+- Difference between **managed and external tables**, `DROP` behavior and `UNDROP`.
+- Why **permissions need three levels** (`USE CATALOG`, `USE SCHEMA`, `SELECT`), and why a Databricks admin identity was required to create catalogs.
+- Why volumes are the governed way to handle files.
+
+**Delta Lake**
+- Parquet files are **immutable**: updates create new files, and the log decides which files are active.
+- How **time travel** works physically (older files remain until `VACUUM`) and how `RESTORE` re-points the log.
+- The roles of `.json` commit files, `.crc` checksum files and checkpoints.
+- **Copy-on-write vs merge-on-read** and exactly why deletion vectors reduce write cost.
+- Deep vs shallow clone trade-offs and where each belongs (backup vs testing).
+
+**Streaming ingestion**
+- How Auto Loader tracks files with a checkpoint, infers and evolves schema, and what each generated folder (`offsets`, `commits`, `rocksdb`, `_schemas`, `_spark_metadata`) contains.
+- Why `availableNow` gives streaming guarantees with batch cost.
+
+**Engineering mindset**
+- Verify theory by **inspecting the storage layer** after every operation.
+- Keep naming, separation of concerns (managed vs external containers) and least privilege in mind from day one.
+
+---
+
+## 🧩 Challenges and How I Solved Them
 
 | Challenge | Cause | Solution |
 |---|---|---|
-| No **Create catalog** option in Catalog Explorer | Logged in as an Entra UPN without `CREATE CATALOG` on the metastore | Made my Databricks account identity an admin (account/metastore admin) |
-| Databricks couldn't access storage | Access Connector existed but had no data-plane role | Assigned **Storage Blob Data Contributor** to the connector's managed identity |
-| Wanted my own storage for managed data | Default metastore used platform-defined storage | Deleted the default metastore and created one with root `data-mgmt-dev` |
-| Confusing "external catalog" naming | A catalog with its own location still holds *managed* tables | Learned the difference between *managed location* and *external table* |
-| Unexpected number of files after updates | Immutable Parquet + deletion vectors + parallel writes | Studied `_delta_log` actions (`add`/`remove`/`deletionVector`) to explain every file |
+| No "Create catalog" option in Catalog Explorer | My signed-in Entra UPN identity had no `CREATE CATALOG` on the metastore | Set my Databricks account login as admin (account/metastore admin) |
+| Metastore needed my own storage | Default metastore used Databricks-chosen storage | Deleted the default metastore and created `vivmodernmegastore` with `data-mgmt-dev` as root |
+| Databricks could not access storage | Access Connector had no data permissions | Assigned **Storage Blob Data Contributor** to the connector's managed identity |
+| Understanding where files really go | Managed table paths are GUID folders | Used `DESCRIBE EXTENDED`/`DESCRIBE DETAIL` and browsed the container |
+| Why files multiplied after an update | Parquet immutability | Studied the Delta log (`add`/`remove`), then compared DV on vs off |
 
 ---
 
-## 📂 Repository Structure
+## 📐 Best Practices Followed
 
-```
-.
-├── README.md                              ← you are here
-├── docs/
-│   ├── databricks_unity_catalog_guide.md  ← Part 1 study guide (Azure, Databricks, Unity Catalog)
-│   └── databricks_delta_lake_part2.md     ← Part 2 study guide (Delta Lake, DVs, clones, Auto Loader)
-└── notebooks/                             ← (add your exported notebooks / .sql / .py files here)
-    ├── 01_unity_catalog_managed_external.sql
-    ├── 02_views_and_volumes.sql
-    ├── 03_delta_lake_updates_time_travel.sql
-    ├── 04_deletion_vectors.sql
-    ├── 05_deep_vs_shallow_clone.sql
-    └── 06_auto_loader.py
-```
-
-> 📝 The notebook file names above are suggestions. Export your Databricks notebooks (`.dbc`, `.ipynb` or source `.py`/`.sql`) into the `notebooks/` folder.
+- ✅ **No secrets**: managed identity with RBAC instead of keys.
+- ✅ **Separate containers** for managed and external data.
+- ✅ **Own metastore root storage** for control and isolation.
+- ✅ **Auto-termination (20 min)** on compute to avoid idle cost.
+- ✅ **Delta format everywhere** for reliability and history.
+- ✅ **Governed access** through external locations and volumes instead of mounts.
+- ✅ **Documented naming** and environment reference for reproducibility.
 
 ---
 
-## 🔁 How to Reproduce
+## 🔁 How to Reproduce This Project
 
-**Prerequisites**
-- An Azure subscription with permission to create resources and assign RBAC roles
-- Azure Databricks workspace (Premium tier is required for Unity Catalog)
-- A Databricks account console login (`accounts.azuredatabricks.net`)
+### Prerequisites
+- An Azure subscription with permission to create resources and assign RBAC roles.
+- Ability to create an Azure Databricks workspace (**Premium tier** is required for Unity Catalog).
+- Access to the Databricks **account console** (`accounts.azuredatabricks.net`).
 
-**Steps**
-1. Create the **Azure Databricks workspace** and a **storage account (ADLS Gen2, hierarchical namespace enabled)** with two containers.
-2. Create an **Access Connector for Azure Databricks** and give it **Storage Blob Data Contributor** on the storage account.
-3. In the account console, **create a metastore** (same region as the workspace), set the root ADLS path and access connector ID, and **attach the workspace**.
-4. Make yourself (or a group) **metastore admin**.
-5. Create a **cluster** that supports Unity Catalog (Standard/Dedicated access mode).
-6. Create a **storage credential** and an **external location**.
-7. Run the notebooks in order: Unity Catalog → Views/Volumes → Delta Lake → Deletion Vectors → Clones → Auto Loader.
+### Quick path
+1. Create the **Azure Databricks workspace** (note the managed resource group name).
+2. Create an **ADLS Gen2 storage account** (enable *hierarchical namespace*) with two containers (managed and external).
+3. Create an **Access Connector for Azure Databricks**; assign it **Storage Blob Data Contributor** on the storage account.
+4. In the **account console**: create a **metastore** (same region as the workspace), set the root ADLS path, add the access connector ID and attach the workspace.
+5. Make sure your Databricks identity is a **metastore/account admin**.
+6. Create a **cluster** (DBR LTS, single node for learning, auto-termination on).
+7. Create a **storage credential** (the access connector) and an **external location** (your external container).
+8. Run the notebooks in order:
 
-> ⚠️ **Replace** all resource names (`vivstandardisedzone`, `mycontainer`, etc.) with your own. Storage account names must be globally unique.
-> 🔒 **Never commit** secrets, keys, subscription IDs or tokens to GitHub. This project uses managed identity, so no secrets are required.
+| Order | Notebook | Topic |
+|---|---|---|
+| 1 | `01_unity_catalog_managed_external.ipynb` | Catalogs, schemas, managed/external tables, DROP/UNDROP |
+| 2 | `02_views_and_volumes.ipynb` | Path queries, views, temp views, volumes |
+| 3 | `03_delta_lake_internals.ipynb` | Updates, log, history, time travel, restore |
+| 4 | `04_deletion_vectors.ipynb` | Copy-on-write vs deletion vectors |
+| 5 | `05_clones.ipynb` | Deep and shallow clones |
+| 6 | `06_auto_loader.ipynb` | Incremental ingestion with `cloudFiles` |
 
----
-
-## 📖 Detailed Study Guides
-
-For the full, interview-ready explanations (with diagrams, line-by-line code walkthroughs, troubleshooting tables and Q&A), see:
-
-| Guide | Contents |
-|---|---|
-| 📘 [Part 1: Azure Databricks + Unity Catalog](docs/databricks_unity_catalog_guide.md) | Databricks history and architecture, Azure end to end, storage accounts, governance with and without Unity Catalog, metastore, managed tables, environment setup, external locations, scenarios, views, volumes, governance features, 34 interview Q&As |
-| 📗 [Part 2: Delta Lake, Deletion Vectors, Clones and Auto Loader](docs/databricks_delta_lake_part2.md) | Delta internals, transaction log (`.json`, `.crc`, checkpoints), copy-on-write, time travel, RESTORE, deletion vectors, deep/shallow clones, Auto Loader internals, 28 interview Q&As |
+> Replace the storage account and container names in the paths with your own. Do **not** commit any real subscription IDs, tenant IDs or resource IDs.
 
 ---
 
-## 🔭 Next Steps
+## 🔭 Future Improvements
 
-- [ ] Implement a full **Medallion pipeline** (Bronze → Silver → Gold) with Auto Loader and a Delta sink
-- [ ] Apply **row filters and column masks** and test with different users/groups
-- [ ] Explore **lineage** in Catalog Explorer and `system.access.*` tables
-- [ ] Try **Delta Sharing** and **Lakehouse Federation**
-- [ ] Orchestrate with **Lakeflow Jobs** and deploy using **Databricks Asset Bundles**
-- [ ] Recreate the infrastructure with **Terraform / Bicep**
-- [ ] Add **data quality checks** (constraints, expectations)
+- [ ] Add **groups and `GRANT`/`REVOKE`** tests with a second user.
+- [ ] Implement **row filters, column masks** and an **ABAC** policy on a PII table.
+- [ ] Build a **medallion pipeline** (Bronze → Silver → Gold) using Auto Loader with a **Delta sink**.
+- [ ] Use **`MERGE`** for upserts and **Change Data Feed** for downstream propagation.
+- [ ] Explore **liquid clustering**, `OPTIMIZE` and **predictive optimization**.
+- [ ] Try **Delta Sharing** and **Lakehouse Federation**.
+- [ ] Orchestrate with **Databricks Jobs / Lakeflow** and deploy with **Databricks Asset Bundles**.
+- [ ] Recreate the full setup with **Terraform** (infrastructure as code).
+- [ ] Add screenshots and a short walkthrough video.
 
 ---
 
 ## 👤 Author
 
 **Vivek**
-Aspiring Data Engineer | Azure | Databricks | Spark | Delta Lake
-
-[![GitHub](https://img.shields.io/badge/GitHub-your--username-181717?style=flat-square&logo=github)](https://github.com/your-username)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-your--profile-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/your-profile)
+Aspiring Data Engineer | Azure | Databricks | Delta Lake | Apache Spark
 
 ---
 
-<div align="center">
-
-⭐ **If this project helped you understand Azure Databricks, Unity Catalog or Delta Lake, consider giving it a star!** ⭐
-
-*Built with curiosity, hands-on experiments and a lot of `DESCRIBE HISTORY`.*
+*Built as a hands-on learning project: every concept here was verified by running the commands and inspecting the files in Azure storage.*
 
 </div>
